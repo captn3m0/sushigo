@@ -1,11 +1,13 @@
 # Sushi Go
 
-This is a work-in-progress conversion of Sushi Go (original), the popular card game into Ruby.
+This is a work-in-progress conversion of Sushi Go (original), the popular card game by Gamewright into Ruby.
 
 The long term goal is to make it easily scriptable via a RPC-interface that hooks into
 something as described in [my ideas repo][ideas].
 
 Currently only supports the original game, and not Sushi Go Party.
+
+You can find the complete rules at [the gamewright website][rules].
 
 ## Installation
 
@@ -42,3 +44,4 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/captn3
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
 
 [ideas]: https://github.com/captn3m0/ideas/blob/master/card-game-modelling.md
+[rules]: http://www.gamewright.com/gamewright/pdfs/Rules/SushiGoTM-RULES.pdf
