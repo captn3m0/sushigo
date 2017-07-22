@@ -23,7 +23,7 @@ module Sushigo
   ]
 
   class Game
-    attr_reader :deck, :players
+    attr_reader :deck, :players, :meals
 
     def initialize(options)
       @players = []
@@ -61,10 +61,14 @@ module Sushigo
     end
 
     def play_round
+      @meals = []
+      @count.times do |index|
+        @meals[index] = []
+      end
       full_hand_count.times do
-
         @players.each_with_index do |player, index|
           card = player.pick_one
+          @meals[index] << card
         end
       end
     end

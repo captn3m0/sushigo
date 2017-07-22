@@ -14,7 +14,7 @@ module Sushigo::Cards
     EGG         = Egg.new
     PUDDING     = Pudding.new
     WASABI      = Wasabi.new
-    CHOPSTICK   = Chopstick.new
+    CHOPSTICK  = Chopstick.new
 
     # The standard sushi-go deck
     def self.standard

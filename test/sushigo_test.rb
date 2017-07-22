@@ -20,5 +20,14 @@ class SushigoTest < Minitest::Test
   def test_that_the_game_runs
     game = Sushigo::Game.new(players: 4)
     game.play
+    assert_equal 4, game.meals.size
+    game.meals.each do |meal|
+      assert_equal 8, meal.size
+    end
+  end
+
+  def test_that_the_game_is_scored
+    game = Sushigo::Game.new(players: 3)
+    game.play
   end
 end
