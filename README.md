@@ -1,22 +1,11 @@
-# Sushigo
+# Sushi Go
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/sushigo`. To experiment with that code, run `bin/console` for an interactive prompt.
+This is a work-in-progress conversion of Sushi Go (original), the popular card game into Ruby.
 
-# List of cards
+The long term goal is to make it easily scriptable via a RPC-interface that hooks into
+something as described in [my ideas repo][ideas].
 
-14x Tempura
-14x Sashimi
-14x Dumpling
-12x 2 Maki
-8x 3 Maki
-6x 1 Maki
-10x Salmon Sushi
-5x Squid Sushi
-5x Omelet Sushi
-10x Dessert
-6x Wasabi
-4x Chopsticks
-
+Currently only supports the original game, and not Sushi Go Party.
 
 ## Installation
 
@@ -36,7 +25,7 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Run `rake` to run tests
 
 ## Development
 
@@ -46,10 +35,10 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/sushigo.
-
+Bug reports and pull requests are welcome on GitHub at https://github.com/captn3m0/sushigo.
 
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
 
+[ideas]: https://github.com/captn3m0/ideas/blob/master/card-game-modelling.md
