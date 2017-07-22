@@ -2,20 +2,35 @@ require 'sushigo/cards/types'
 
 module Sushigo::Cards
   class Deck
-    include Cards
+
+    TEMPURA     = Tempura.new
+    SASHIMI     = Sashimi.new
+    DUMPLING    = Dumpling.new
+    MAKI2       = Maki2.new
+    MAKI3       = Maki3.new
+    MAKI1       = Maki1.new
+    SALMON      = Salmon.new
+    SQUID       = Squid.new
+    EGG         = Egg.new
+    PUDDING     = Pudding.new
+    WASABI      = Wasabi.new
+    CHOPSTICK   = Chopstick.new
+
     # The standard sushi-go deck
-    @deck =
-      [TEMPURA]     * 14 +
-      [SASHIMI]     * 14 +
-      [DUMPLING]    * 14 +
-      [MAKI2]       * 12 +
-      [MAKI3]       * 8  +
-      [MAKI1]       * 6  +
-      [SALMON]      * 10 +
-      [SQUID]       * 5  +
-      [EGG]         * 5  +
-      [PUDDING]     * 10 +
-      [WASABI]      * 6  +
-      [CHOPSTICKS]  * 4
+    def self.standard
+      Array.new(14, TEMPURA) +
+      Array.new(14, SASHIMI) +
+      Array.new(14, DUMPLING) +
+      Array.new(12, MAKI2) +
+      Array.new(8, MAKI3) +
+      Array.new(6, MAKI1) +
+      Array.new(10, SALMON) +
+      Array.new(5, SQUID) +
+      Array.new(5, EGG) +
+      Array.new(10, PUDDING) +
+      Array.new(6, WASABI) +
+      Array.new(4, CHOPSTICK)
+    end
+
   end
 end
