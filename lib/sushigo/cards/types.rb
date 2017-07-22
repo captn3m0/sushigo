@@ -17,12 +17,10 @@ module Sushigo::Cards
 
   class Dumpling < Card
     def self.score_round(deck, other_decks = [])
-      dumplings = deck.select { |c| c.is_a? Dumpling}
-      count = dumplings.count
-      sets = (count/5).floor
-      remainders = count % 5
       lookup = [0, 1, 3, 6, 10, 15]
-      sets * 15 + lookup[remainders]
+      dumplings = deck.select { |c| c.is_a? Dumpling}
+      count = [dumplings.count, 5].min
+      lookup[count]
     end
   end
 
