@@ -53,5 +53,19 @@ module Sushigo::Cards
       assert_score 6, [Deck::EGG, Deck::SALMON, Deck::SQUID]
       assert_score 10, [Deck::EGG, Deck::EGG, Deck::SQUID, Deck::SALMON, Deck::SQUID]
     end
+
+    def test_that_wasabis_triple_the_next_nigiri
+      assert_score 3, [Deck::WASABI, Deck::EGG]
+      assert_score 6, [Deck::WASABI, Deck::SALMON]
+      assert_score 9, [Deck::WASABI, Deck::SQUID]
+    end
+
+    def test_that_wasabis_triple_only_the_next_nigiri
+      assert_score 10, [Deck::WASABI, Deck::SQUID, Deck::EGG]
+      assert_score 11, [Deck::EGG, Deck::WASABI, Deck::SQUID, Deck::EGG]
+      assert_score 13, [Deck::SALMON, Deck::WASABI, Deck::SQUID, Deck::SALMON]
+      assert_score 3, [Deck::WASABI, Deck::TEMPURA, Deck::EGG]
+    end
+
   end
 end
