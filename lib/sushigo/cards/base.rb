@@ -4,7 +4,7 @@ module Sushigo::Cards
       0
     end
 
-    def round_score(d)
+    def self.score_round(deck, other_decks = [])
       0
     end
 

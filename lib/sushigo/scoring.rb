@@ -3,7 +3,6 @@ module Sushigo
 
     # Score the single round and return a number
     def score_round(deck, other_decks)
-      # puts MENU
     end
 
     # This is the player deck at the end of the game

@@ -2,36 +2,37 @@ require 'sushigo/cards/base'
 
 module Sushigo::Cards
   class Tempura < Card
-    def round_score(deck)
-      tempuras = d.select { |c| c.is_a? Tempura }
-      (tempuras.count/2).floor * 5
+    def self.score_round(deck, other_decks = [])
+      tempuras = deck.select { |c| c.is_a? Tempura }
+      (tempuras.count/2).floor*5
     end
   end
 
   class Sashimi < Card
-    def round_score(deck)
-      sashimis = d.select { |c| c.is_a? Sashimi}
+    def self.score_round(deck, other_decks = [])
+      sashimis = deck.select { |c| c.is_a? Sashimi}
       (sashimis.count/3).floor * 10
     end
   end
 
   class Dumpling < Card
-    def round_score(deck)
-      dumplings = d.select { |c| c.is_a? Dumpling}
-      sets = (dumplings/5).floor
-      remainders = dumplings % 5
+    def self.score_round(deck, other_decks = [])
+      dumplings = deck.select { |c| c.is_a? Dumpling}
+      count = dumplings.count
+      sets = (count/5).floor
+      remainders = count % 5
       lookup = [0, 1, 3, 6, 10, 15]
       sets * 15 + lookup[remainders]
     end
   end
 
   class Nigiri < Card
-    def round_score(deck)
+    def self.score_round(deck, other_decks = [])
       score = 0
       # Only works for cards that didn't have a nigiri behind them
-      nigiris = d.each do |card, index|
+      nigiris = deck.each do |card, index|
         if card.is_a? Nigiri
-          score += card.class.SELF_SCORE
+          score += card.class::SELF_SCORE
         end
       end
       score
@@ -51,24 +52,26 @@ module Sushigo::Cards
   end
 
   class Wasabi < Card
-    def round_score(deck)
+    def self.score_round(deck, other_decks = [])
       score = 0
-      d.each do |card, index|
+      deck.each_with_index do |card, index|
         if card.is_a? Wasabi
-          if d[index+1].is_a? Nigiri
+          if deck[index+1].is_a? Nigiri
             # add the double score because of wasabi
-            score += d[index+1].class.SELF_SCORE * 2
+            score += deck[index+1].class::SELF_SCORE * 2
           end
         end
       end
+      score
     end
   end
 
   class Pudding < Card
-    def game_score(deck, *other_decks)
+    # Round score is zero for pudding
+    def self.game_score(deck, other_decks)
       own_puddings = deck.select {|c| c.is_a? Pudding}.count
       other_pudding_counts = other_decks.map do |d|
-        d.select {|c| c.is_a? Pudding}.count
+        deck.select {|c| c.is_a? Pudding}.count
       end
 
       max = other_pudding_counts.max
@@ -91,7 +94,7 @@ module Sushigo::Cards
   end
 
   class Maki < Card
-    def count_makis(deck)
+    def self.count_makis(deck)
       maki_count = 0
 
       # TODO: Replace with reduce
@@ -102,7 +105,8 @@ module Sushigo::Cards
       maki_count
     end
 
-    def round_score(deck, *other_decks)
+    def self.score_round(deck, other_decks)
+      return 0
       self_count = count_makis deck
 
       all_counters = ([deck] + other_decks).map count_makis

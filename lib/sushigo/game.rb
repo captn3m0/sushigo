@@ -13,9 +13,9 @@ module Sushigo
     Maki,
     Nigiri,
     Pudding,
+    Sashimi,
     Tempura,
     Wasabi,
-    Chopstick
   ]
 
   KEEPER_CARDS = [
@@ -71,6 +71,21 @@ module Sushigo
           @meals[index] << card
         end
       end
+      Game.score_round(@meals)
+    end
+
+    def self.score_round(meals)
+      scores = []
+      meals.each do |meal|
+        other_meals = meals - [meal]
+        unique_cards = meal.uniq
+        score = 0
+        unique_cards.each do |card|
+          score += card.class.score_round(meal, other_meals)
+        end
+        scores << score
+      end
+      scores
     end
 
   end
