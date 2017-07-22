@@ -29,7 +29,7 @@ module Sushigo::Cards
       score = 0
       # Only works for cards that didn't have a nigiri behind them
       nigiris = deck.each do |card, index|
-        if card.is_a? Nigiri
+        if card.is_a? self
           score += card.class::SELF_SCORE
         end
       end

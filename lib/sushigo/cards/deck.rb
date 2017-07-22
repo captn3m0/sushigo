@@ -6,15 +6,18 @@ module Sushigo::Cards
     TEMPURA     = Tempura.new
     SASHIMI     = Sashimi.new
     DUMPLING    = Dumpling.new
+
+    MAKI1       = Maki1.new
     MAKI2       = Maki2.new
     MAKI3       = Maki3.new
-    MAKI1       = Maki1.new
+
+    WASABI      = Wasabi.new
+    EGG         = Egg.new
     SALMON      = Salmon.new
     SQUID       = Squid.new
-    EGG         = Egg.new
+
     PUDDING     = Pudding.new
-    WASABI      = Wasabi.new
-    CHOPSTICK  = Chopstick.new
+    CHOPSTICK   = Chopstick.new
 
     # The standard sushi-go deck
     def self.standard
