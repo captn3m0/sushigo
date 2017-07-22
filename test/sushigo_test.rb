@@ -16,4 +16,9 @@ class SushigoTest < Minitest::Test
     assert_equal 10, game.players[0].deck.size
     assert_equal 10, game.players[1].deck.size
   end
+
+  def test_that_the_game_runs
+    game = Sushigo::Game.new(players: 4)
+    game.play
+  end
 end

@@ -7,5 +7,9 @@ module Sushigo::Cards
     def round_score(d)
       0
     end
+
+    def to_s
+      self.class.name
+    end
   end
 end

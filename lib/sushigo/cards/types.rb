@@ -25,7 +25,7 @@ module Sushigo::Cards
     end
   end
 
-  class Nigiri
+  class Nigiri < Card
     def round_score(deck)
       score = 0
       # Only works for cards that didn't have a nigiri behind them
