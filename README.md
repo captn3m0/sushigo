@@ -2,7 +2,21 @@
 
 Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/sushigo`. To experiment with that code, run `bin/console` for an interactive prompt.
 
-TODO: Delete this and the text above, and describe your gem
+# List of cards
+
+14x Tempura
+14x Sashimi
+14x Dumpling
+12x 2 Maki
+8x 3 Maki
+6x 1 Maki
+10x Salmon Sushi
+5x Squid Sushi
+5x Omelet Sushi
+10x Dessert
+6x Wasabi
+4x Chopsticks
+
 
 ## Installation
 

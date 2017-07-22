@@ -5,7 +5,7 @@ class SushigoTest < Minitest::Test
     refute_nil ::Sushigo::VERSION
   end
 
-  def test_it_does_something_useful
-    assert false
+  def test_that_we_can_instantiate_the_game
+    game = Sushigo::Game.new
   end
 end
