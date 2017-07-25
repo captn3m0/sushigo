@@ -1,7 +1,7 @@
 module Sushigo::Cards
   class Card
-    def game_score(d)
-      0
+    def score_dessert(desserts)
+      [0] * desserts.size
     end
 
     def self.score_round(decks)

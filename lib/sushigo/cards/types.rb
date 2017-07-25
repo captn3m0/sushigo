@@ -98,30 +98,57 @@ module Sushigo::Cards
     end
   end
 
+  # The player with the most pudding cards
+  # scores 6 points. If multiple players tie for
+  # the most, they split the points evenly
+  # (ignoring any remainder).
+  # The player with the fewest pudding cards
+  # (including players with none) loses 6 points.
+  # If multiple players tie for the least, they split the
+  # lost points evenly (ignoring any remainder).
+  #
+  # Example: Chris has 4 pudding cards, Phil has 3 and Lisa and
+  # Amy each have 0. Chris has the most and so scores 6 points.
+  # Lisa and Amy tie for the least and so divide the lost 6 points
+  # between them, each losing 3 points.
+  #
+  # On the rare occasion that all players have the same number of
+  # pudding cards, no one scores anything for them.
+  #
+  # NOTE: In a 2 player game, no one loses any points for puddings.
+  # Only the points for most pudding cards are awarded.
   class Pudding < Card
     # Round score is zero for pudding
-    def self.game_score(deck, other_decks)
-      own_puddings = deck.select {|c| c.is_a? Pudding}.count
-      other_pudding_counts = other_decks.map do |d|
-        deck.select {|c| c.is_a? Pudding}.count
+    def self.score_dessert(decks)
+      pudding_counts = decks.map { |deck| deck.select {|c| c.is_a? Pudding}.count}
+
+      max = pudding_counts.max
+      min = pudding_counts.min
+
+      # No one scores anything if al players
+      # scored the same
+      if max == min
+        return [0] * decks.size
       end
 
-      max = other_pudding_counts.max
-      min = other_pudding_counts.min
+      max_puddings_player_count = pudding_counts.select {|count| count == max}.count
+      min_puddings_player_count = pudding_counts.select {|count| count == min}.count
 
-      max_puddings_player_count = other_pudding_counts.select {|count| count == max}
-      min_puddings_player_count = other_pudding_counts.select {|count| count == min}
+      scores = []
 
-      score = 0
-
-      if own_puddings >= max
-        score = 6 / (max_puddings_player_count + 1)
+      pudding_counts.each do |count|
+        # If you were the highest scoring player
+        if count == max
+          scores << (6.0/max_puddings_player_count).floor
+        # if you were the least scoring player and
+        # there were more than 2 players
+        elsif count == min and decks.count > 2
+          scores << (-6.0/min_puddings_player_count).ceil
+        else
+          scores << 0
+        end
       end
-
-      if own_puddings <= min
-        score = -6 / (min_puddings_player_count + 1)
-      end
-
+      scores
     end
   end
 

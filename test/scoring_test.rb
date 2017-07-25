@@ -8,6 +8,11 @@ module Sushigo::Cards
       assert_equal score, scores[0]
     end
 
+    def assert_dessert_score scores, *decks
+      calc_scores = Sushigo::Game.score_dessert decks
+      assert_equal scores, calc_scores
+    end
+
     def assert_maki_score scores, *decks
       calc_scores = Sushigo::Game.score_round decks
       assert_equal scores, calc_scores
@@ -74,13 +79,32 @@ module Sushigo::Cards
     end
 
     def test_that_maki_rolls_can_be_scored
-      empty_deck = []
       assert_maki_score [6, 0], [Deck::MAKI1], []
       assert_maki_score [3, 6], [Deck::MAKI1], [Deck::MAKI2]
       assert_maki_score [3, 3], [Deck::MAKI1, Deck::MAKI1], [Deck::MAKI2]
       assert_maki_score [3, 6], [Deck::MAKI1], [Deck::MAKI2, Deck::MAKI1]
       assert_maki_score [3, 3, 3], [Deck::MAKI3], [Deck::MAKI2, Deck::MAKI1], [Deck::MAKI1]
       assert_maki_score [6, 3, 0], [Deck::MAKI3, Deck::MAKI1], [Deck::MAKI2, Deck::MAKI1], [Deck::MAKI1]
+    end
+
+    def test_that_puddings_can_be_scored
+      zero    = []
+      one     = [Deck::PUDDING]
+      two     = [Deck::PUDDING]*2
+      three   = [Deck::PUDDING]*3
+      four    = [Deck::PUDDING]*4
+      # All players are tied
+      assert_dessert_score [0], one
+      # all players are tied, so everyone scores zero
+      assert_dessert_score [0, 0], one, one
+      # 2 player game, no negatives are awarded
+      assert_dessert_score [6, 0], two, one
+      assert_dessert_score [6, 0, -6], two, one, zero
+      assert_dessert_score [6, 0, -3, -3], four, three, two, two
+      assert_dessert_score [6, -2, -2, -2], four, two, two, two
+      assert_dessert_score [6, -1, -1, -1, -1], four, two, two, two, two
+      assert_dessert_score [1, 1, 1, 1, 1, -3, -3], two, two, two, two, two, one, one
+      assert_dessert_score [1, 1, 1, 1, 1, 0, 0, -6], two, two, two, two, two, one, one, zero
     end
 
   end

@@ -18,7 +18,7 @@ module Sushigo
     Wasabi,
   ]
 
-  KEEPER_CARDS = [
+  DESSERTS = [
     Pudding
   ]
 
@@ -79,6 +79,17 @@ module Sushigo
 
       Sushigo::MENU.each do |dish|
         scores << dish.score_round(meals)
+      end
+
+      scores.transpose.map {|player_scores| player_scores.reduce(:+)}
+    end
+
+    def self.score_dessert(desserts)
+      scores = []
+      # Already ready for Sushi Go Party
+      # Where we have multiple desserts
+      Sushigo::DESSERTS.each do |dessert|
+        scores << dessert.score_dessert(desserts)
       end
 
       scores.transpose.map {|player_scores| player_scores.reduce(:+)}
