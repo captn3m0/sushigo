@@ -6,8 +6,10 @@ module Sushigo
     end
     attr_accessor :deck
 
+    # Since cards are already shuffled
+    # we pick the top card
     def pick_one
-      @deck.shuffle!.pop
+      @deck.pop
     end
   end
 end

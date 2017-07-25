@@ -26,14 +26,8 @@ module Sushigo::Cards
 
   class Nigiri < Card
     def self.score_round(deck, other_decks = [])
-      score = 0
-      # Only works for cards that didn't have a nigiri behind them
-      nigiris = deck.each do |card, index|
-        if card.is_a? self
-          score += card.class::SELF_SCORE
-        end
-      end
-      score
+      nigiris = deck.select { |c| c.is_a? self}
+      nigiris.inject(0){|sum,card| sum + card.class::SELF_SCORE }
     end
   end
 
@@ -52,14 +46,35 @@ module Sushigo::Cards
   class Wasabi < Card
     def self.score_round(deck, other_decks = [])
       score = 0
-      deck.each_with_index do |card, index|
-        if card.is_a? Wasabi
-          if deck[index+1].is_a? Nigiri
-            # add the double score because of wasabi
-            score += deck[index+1].class::SELF_SCORE * 2
+
+      wasabi_indexes = deck.map.with_index{ |c, index| c.is_a?(Wasabi) ? index : nil}.compact
+      nigiri_indexes = deck.map.with_index{ |c, index| c.is_a?(Nigiri) ? index : nil}.compact
+
+      scored_nigiris = []
+
+      wasabi_indexes.each do |i|
+        # Keep going through all the nigiris after this index
+        # and take them if one isn't taken
+        nigiris_after_this_wasabi = nigiri_indexes.select do |k|
+          # Find nigiris that are after this wasabi (k>i)
+          # AND which are not included in the list of already
+          # scored nigiris
+          (k > i) and (! scored_nigiris.include? k)
+        end
+
+        # Take all the possible nigiris
+        # and attempt to score them if
+        # they have not been already claimed
+        # by a Wasabi
+        nigiris_after_this_wasabi.each do |j|
+          unless scored_nigiris.include? j
+            scored_nigiris << j
+            score += 2 * deck[j].class::SELF_SCORE
+            break
           end
         end
       end
+
       score
     end
   end
