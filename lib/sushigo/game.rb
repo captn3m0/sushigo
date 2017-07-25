@@ -1,7 +1,6 @@
 require 'sushigo/scoring'
 require 'sushigo/player'
 require 'sushigo/cards/deck'
-require 'pp'
 
 module Sushigo
   include Cards
@@ -77,16 +76,12 @@ module Sushigo
 
     def self.score_round(meals)
       scores = []
-      meals.each do |meal|
-        other_meals = meals - [meal]
-        unique_cards = meal.uniq
-        score = 0
-        unique_cards.each do |card|
-          score += card.class.score_round(meal, other_meals)
-        end
-        scores << score
+
+      Sushigo::MENU.each do |dish|
+        scores << dish.score_round(meals)
       end
-      scores
+
+      scores.transpose.map {|player_scores| player_scores.reduce(:+)}
     end
 
   end

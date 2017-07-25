@@ -75,9 +75,12 @@ module Sushigo::Cards
 
     def test_that_maki_rolls_can_be_scored
       empty_deck = []
-      # assert_maki_score [6, 0], [Deck::MAKI1], []
-      # assert_maki_score [3, 3], [Deck::MAKI1], [Deck::MAKI2]
+      assert_maki_score [6, 0], [Deck::MAKI1], []
+      assert_maki_score [3, 6], [Deck::MAKI1], [Deck::MAKI2]
+      assert_maki_score [3, 3], [Deck::MAKI1, Deck::MAKI1], [Deck::MAKI2]
       assert_maki_score [3, 6], [Deck::MAKI1], [Deck::MAKI2, Deck::MAKI1]
+      assert_maki_score [3, 3, 3], [Deck::MAKI3], [Deck::MAKI2, Deck::MAKI1], [Deck::MAKI1]
+      assert_maki_score [6, 3, 0], [Deck::MAKI3, Deck::MAKI1], [Deck::MAKI2, Deck::MAKI1], [Deck::MAKI1]
     end
 
   end

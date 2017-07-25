@@ -1,38 +1,49 @@
 require 'sushigo/cards/base'
 
-# TODO: Change the scoring so that it
-# takes an array of meals and returns
-# an array of scores for all Types
-# Makes it much easier to manage across
-# different types of cards.
 module Sushigo::Cards
   class Tempura < Card
-    def self.score_round(deck, other_decks = [])
-      tempuras = deck.select { |c| c.is_a? Tempura }
-      (tempuras.count/2).floor*5
+    def self.score_round(decks)
+      scores = []
+      decks.each do |deck|
+        tempuras = deck.select { |c| c.is_a? Tempura }
+        scores <<(tempuras.count/2).floor*5
+      end
+      scores
     end
   end
 
   class Sashimi < Card
-    def self.score_round(deck, other_decks = [])
-      sashimis = deck.select { |c| c.is_a? Sashimi}
-      (sashimis.count/3).floor * 10
+    def self.score_round(decks)
+      scores = []
+      decks.each do |deck|
+        sashimis = deck.select { |c| c.is_a? Sashimi}
+        scores << (sashimis.count/3).floor * 10
+      end
+      scores
     end
   end
 
   class Dumpling < Card
-    def self.score_round(deck, other_decks = [])
-      lookup = [0, 1, 3, 6, 10, 15]
-      dumplings = deck.select { |c| c.is_a? Dumpling}
-      count = [dumplings.count, 5].min
-      lookup[count]
+    def self.score_round(decks)
+      scores = []
+      decks.each do |deck|
+        lookup = [0, 1, 3, 6, 10, 15]
+        dumplings = deck.select { |c| c.is_a? Dumpling}
+        count = [dumplings.count, 5].min
+        scores << lookup[count]
+      end
+      scores
     end
   end
 
   class Nigiri < Card
-    def self.score_round(deck, other_decks = [])
-      nigiris = deck.select { |c| c.is_a? self}
-      nigiris.inject(0){|sum,card| sum + card.class::SELF_SCORE }
+    def self.score_round(decks)
+      scores = []
+      decks.each do |deck|
+        nigiris = deck.select { |c| c.is_a? self}
+        scores << nigiris.inject(0){|sum,card| sum + card.class::SELF_SCORE }
+      end
+      scores
     end
   end
 
@@ -49,38 +60,41 @@ module Sushigo::Cards
   end
 
   class Wasabi < Card
-    def self.score_round(deck, other_decks = [])
-      score = 0
+    def self.score_round(decks)
+      scores = []
 
-      wasabi_indexes = deck.map.with_index{ |c, index| c.is_a?(Wasabi) ? index : nil}.compact
-      nigiri_indexes = deck.map.with_index{ |c, index| c.is_a?(Nigiri) ? index : nil}.compact
+      decks.each do |deck|
+        score = 0
+        wasabi_indexes = deck.map.with_index{ |c, index| c.is_a?(Wasabi) ? index : nil}.compact
+        nigiri_indexes = deck.map.with_index{ |c, index| c.is_a?(Nigiri) ? index : nil}.compact
 
-      scored_nigiris = []
+        scored_nigiris = []
 
-      wasabi_indexes.each do |i|
-        # Keep going through all the nigiris after this index
-        # and take them if one isn't taken
-        nigiris_after_this_wasabi = nigiri_indexes.select do |k|
-          # Find nigiris that are after this wasabi (k>i)
-          # AND which are not included in the list of already
-          # scored nigiris
-          (k > i) and (! scored_nigiris.include? k)
-        end
+        wasabi_indexes.each do |i|
+          # Keep going through all the nigiris after this index
+          # and take them if one isn't taken
+          nigiris_after_this_wasabi = nigiri_indexes.select do |k|
+            # Find nigiris that are after this wasabi (k>i)
+            # AND which are not included in the list of already
+            # scored nigiris
+            (k > i) and (! scored_nigiris.include? k)
+          end
 
-        # Take all the possible nigiris
-        # and attempt to score them if
-        # they have not been already claimed
-        # by a Wasabi
-        nigiris_after_this_wasabi.each do |j|
-          unless scored_nigiris.include? j
-            scored_nigiris << j
-            score += 2 * deck[j].class::SELF_SCORE
-            break
+          # Take all the possible nigiris
+          # and attempt to score them if
+          # they have not been already claimed
+          # by a Wasabi
+          nigiris_after_this_wasabi.each do |j|
+            unless scored_nigiris.include? j
+              scored_nigiris << j
+              score += 2 * deck[j].class::SELF_SCORE
+              break
+            end
           end
         end
+        scores << score
       end
-
-      score
+      scores
     end
   end
 
@@ -117,35 +131,29 @@ module Sushigo::Cards
       maki_cards.inject(0){|sum, card| sum + card.class::MAKIS }
     end
 
-    def self.score_round(deck, other_decks = [])
-      self_count = count_makis deck
-
-      all_counters = ([deck] + other_decks).map {|deck| count_makis(deck)}
-
+    def self.score_round(decks)
+      scores = []
+      all_counters = decks.map {|deck| count_makis(deck)}
       all_unique_maki_counts = all_counters.uniq.sort.reverse
 
       highest_counter = all_unique_maki_counts[0]
-      # puts "HIGHEST: #{highest_counter}"
       second_highest_counter = all_unique_maki_counts[1]
-      # puts "SECOND_HIGHEST: #{second_highest_counter}"
 
       # These are the number of people who are sharing the highest
       # and the second highest counts
       number_highest = all_counters.select{|counter| counter == highest_counter}.size
       number_second_highest = all_counters.select{|counter| counter == second_highest_counter}.size
 
-      puts "#{number_highest} | #{number_second_highest}"
-
-      # equal because we included self in the counters array
-      if self_count > 0  and self_count == highest_counter
-        return (6 / number_highest).floor
+      all_counters.each do |count|
+        if count > 0 and count === highest_counter
+          scores << (6/number_highest).floor
+        elsif count > 0 and count === second_highest_counter
+          scores << (3/number_second_highest).floor
+        else
+          scores << 0
+        end
       end
-
-      if self_count > 0 and self_count == second_highest_counter and number_highest == 1
-        return (3 / number_second_highest).floor
-      end
-
-      0
+      scores
     end
   end
 
