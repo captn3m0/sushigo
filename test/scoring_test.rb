@@ -2,9 +2,15 @@ require 'test_helper'
 
 module Sushigo::Cards
   class ScoringTest < Minitest::Test
+
     def assert_score score, deck
       scores = Sushigo::Game.score_round [deck]
       assert_equal score, scores[0]
+    end
+
+    def assert_maki_score scores, *decks
+      calc_scores = Sushigo::Game.score_round decks
+      assert_equal scores, calc_scores
     end
 
     def test_that_tempuras_can_be_scored
@@ -65,6 +71,13 @@ module Sushigo::Cards
       assert_score 11, [Deck::EGG, Deck::WASABI, Deck::SQUID, Deck::EGG]
       assert_score 13, [Deck::SALMON, Deck::WASABI, Deck::SQUID, Deck::SALMON]
       assert_score 3, [Deck::WASABI, Deck::TEMPURA, Deck::EGG]
+    end
+
+    def test_that_maki_rolls_can_be_scored
+      empty_deck = []
+      # assert_maki_score [6, 0], [Deck::MAKI1], []
+      # assert_maki_score [3, 3], [Deck::MAKI1], [Deck::MAKI2]
+      assert_maki_score [3, 6], [Deck::MAKI1], [Deck::MAKI2, Deck::MAKI1]
     end
 
   end

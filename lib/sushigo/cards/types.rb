@@ -1,5 +1,10 @@
 require 'sushigo/cards/base'
 
+# TODO: Change the scoring so that it
+# takes an array of meals and returns
+# an array of scores for all Types
+# Makes it much easier to manage across
+# different types of cards.
 module Sushigo::Cards
   class Tempura < Card
     def self.score_round(deck, other_decks = [])
@@ -108,29 +113,28 @@ module Sushigo::Cards
 
   class Maki < Card
     def self.count_makis(deck)
-      maki_count = 0
-
-      # TODO: Replace with reduce
-      deck.each do |card|
-        maki_count += card.class.MAKIS if card.is_a? Maki
-      end
-
-      maki_count
+      maki_cards = deck.select { |c| c.is_a? Maki}
+      maki_cards.inject(0){|sum, card| sum + card.class::MAKIS }
     end
 
-    def self.score_round(deck, other_decks)
-      return 0
+    def self.score_round(deck, other_decks = [])
       self_count = count_makis deck
 
-      all_counters = ([deck] + other_decks).map count_makis
+      all_counters = ([deck] + other_decks).map {|deck| count_makis(deck)}
 
       all_unique_maki_counts = all_counters.uniq.sort.reverse
 
       highest_counter = all_unique_maki_counts[0]
+      # puts "HIGHEST: #{highest_counter}"
       second_highest_counter = all_unique_maki_counts[1]
+      # puts "SECOND_HIGHEST: #{second_highest_counter}"
 
-      number_highest = all_counters.select {|counter| counter == highest_counter}.size
-      number_second_highest = all_counters.select {|counter| counter == second_highest_counter}.size
+      # These are the number of people who are sharing the highest
+      # and the second highest counts
+      number_highest = all_counters.select{|counter| counter == highest_counter}.size
+      number_second_highest = all_counters.select{|counter| counter == second_highest_counter}.size
+
+      puts "#{number_highest} | #{number_second_highest}"
 
       # equal because we included self in the counters array
       if self_count > 0  and self_count == highest_counter
@@ -140,6 +144,8 @@ module Sushigo::Cards
       if self_count > 0 and self_count == second_highest_counter and number_highest == 1
         return (3 / number_second_highest).floor
       end
+
+      0
     end
   end
 
@@ -147,15 +153,15 @@ module Sushigo::Cards
   # So we use different classes
   # for each of them
   class Maki1 < Maki
-    MAKIS ||= 1
+    MAKIS = 1
   end
 
   class Maki2 < Maki
-    MAKIS ||= 2
+    MAKIS = 2
   end
 
   class Maki3 < Maki
-    MAKIS ||= 3
+    MAKIS = 3
   end
 
   # They score zero always

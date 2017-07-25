@@ -1,6 +1,7 @@
 require 'sushigo/scoring'
 require 'sushigo/player'
 require 'sushigo/cards/deck'
+require 'pp'
 
 module Sushigo
   include Cards
