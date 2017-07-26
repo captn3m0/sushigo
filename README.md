@@ -5,7 +5,12 @@ This is a work-in-progress conversion of Sushi Go (original), the popular card g
 The long term goal is to make it easily scriptable via a RPC-interface that hooks into
 something as described in [my ideas repo][ideas].
 
-Currently only supports the original game, and not Sushi Go Party.
+Currently only supports the original game, and not Sushi Go Party. The following features are supported:
+
+1. Scoring of individual rounds and final scoring (desserts)
+2. Setup for 2-5 players
+
+Chopsticks are not yet implemented, and neither is the pick-pass mechanism. There are rigorous tests for the scoring algorithms though.
 
 You can find the complete rules at [the gamewright website][rules].
 
