@@ -1,4 +1,3 @@
-require 'sushigo/scoring'
 require 'sushigo/player'
 require 'sushigo/cards/deck'
 require 'sushigo/errors'
@@ -34,24 +33,13 @@ module Sushigo
       @count.times do
         @players << Player.new
       end
+      @desserts = []
       @deck = Cards::Deck.standard
     end
 
     # We setup the game
-    def setup
-      # In a 2 player game, deal 10 cards to each player.
-      # In a 3 player game, deal 9 cards to each player.
-      # In a 4 player game, deal 8 cards to each player.
-      # In a 5 player game, deal 7 cards to each player
-      cards_per_player = full_hand_count
-
+    def setup_game
       @deck.shuffle!
-
-      # This is as per the original Sushi Go Rules
-      # And not the party rules
-      @players.each do |player|
-        player.deck = @deck.pop cards_per_player
-      end
     end
 
     def full_hand_count
@@ -59,18 +47,42 @@ module Sushigo
     end
 
     def play
+      round_scores = []
       3.times do |_i|
-        setup
-        play_round
+        setup_game
+        round_scores << play_round
       end
+      dessert_scores = Game.score_dessert(@desserts)
+      Game.calc_final_scores(round_scores, dessert_scores)
     end
 
-    def play_round
+    def self.calc_final_scores(round, dessert)
+      scores = round << dessert
+      scores.transpose.map { |player_scores| player_scores.reduce(:+) }
+    end
+
+    def setup_round
+      # In a 2 player game, deal 10 cards to each player.
+      # In a 3 player game, deal 9 cards to each player.
+      # In a 4 player game, deal 8 cards to each player.
+      # In a 5 player game, deal 7 cards to each player
+      cards_per_player = full_hand_count
+
+      # This is as per the original Sushi Go Rules
+      # And not the party rules
+      @players.each do |player|
+        player.deck = @deck.pop cards_per_player
+      end
+
       @meals = []
 
       @count.times do |index|
         @meals[index] = []
       end
+    end
+
+    def play_round
+      setup_round
 
       full_hand_count.times do
         temporary_deck = nil
@@ -116,10 +128,17 @@ module Sushigo
         end
       end
 
+      save_desserts_for_later
+
       Game.score_round(@meals)
     end
 
-    def pick_and_pass; end
+    def save_desserts_for_later
+      @meals.each_with_index do |meal, index|
+        @desserts[index] ||= []
+        @desserts[index] += meal.select { |c| c.is_a? Sushigo::Cards::Dessert }
+      end
+    end
 
     def self.score_round(meals)
       scores = []

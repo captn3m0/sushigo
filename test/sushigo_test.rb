@@ -7,7 +7,8 @@ class SushigoTest < Minitest::Test
 
   def test_that_we_can_setup_the_game
     game = Sushigo::Game.new(players: 2)
-    game.setup
+    game.setup_game
+    game.setup_round
 
     # Standard deck is 108 cards
     # so 88 cards are left undealt

@@ -2,6 +2,7 @@ require 'sushigo/cards/base'
 
 module Sushigo
   module Cards
+    class Dessert < Card; end
     class Tempura < Card
       def self.score_round(decks)
         scores = []
@@ -117,7 +118,7 @@ module Sushigo
     #
     # NOTE: In a 2 player game, no one loses any points for puddings.
     # Only the points for most pudding cards are awarded.
-    class Pudding < Card
+    class Pudding < Dessert
       # Round score is zero for pudding
       def self.score_dessert(decks)
         pudding_counts = decks.map { |deck| deck.select { |c| c.is_a? Pudding }.count }

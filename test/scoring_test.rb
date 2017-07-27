@@ -2,7 +2,7 @@ require 'test_helper'
 
 module Sushigo
   module Cards
-    class ScoringTest < Minitest::Test
+    class CardScoringTest < Minitest::Test
       def assert_score(score, deck)
         scores = Sushigo::Game.score_round [deck]
         assert_equal score, scores[0]
@@ -110,6 +110,37 @@ module Sushigo
         assert_dessert_score [6, -1, -1, -1, -1], four, two, two, two, two
         assert_dessert_score [1, 1, 1, 1, 1, -3, -3], two, two, two, two, two, one, one
         assert_dessert_score [1, 1, 1, 1, 1, 0, 0, -6], two, two, two, two, two, one, one, zero
+      end
+    end
+
+    class GameScoringTest < Minitest::Test
+      def test_that_desserts_are_scored_correctly
+        three   = [Deck::PUDDING] * 3
+        four    = [Deck::PUDDING] * 4
+        assert_equal [0, 6], Game.score_dessert([three, four])
+      end
+
+      def test_that_rounds_are_scored_correctly
+        meals = [
+          [Deck::PUDDING, Deck::EGG, Deck::WASABI,
+           Deck::SALMON, Deck::CHOPSTICK, Deck::MAKI1, Deck::MAKI2],
+          [Deck::WASABI, Deck::SASHIMI, Deck::SASHIMI,
+           Deck::SASHIMI, Deck::PUDDING, Deck::MAKI3, Deck::TEMPURA]
+        ]
+
+        assert_equal [10, 13], Sushigo::Game.score_round(meals)
+      end
+
+      def test_that_final_scores_add_up_correctly
+        round_scores = [
+          [5, 1, 2],
+          [2, 3, 4]
+        ]
+        dessert_scores = [
+          6, 0, -6
+        ]
+        scores = Sushigo::Game.calc_final_scores round_scores, dessert_scores
+        assert_equal [13, 4, 0], scores
       end
     end
   end

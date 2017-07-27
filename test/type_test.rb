@@ -23,6 +23,5 @@ class TypeTest < Minitest::Test
   def test_other_classes
     assert Sushigo::Player
     assert Sushigo::Game
-    assert Sushigo::Scoring
   end
 end
