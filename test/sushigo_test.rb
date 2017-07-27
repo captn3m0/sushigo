@@ -26,7 +26,7 @@ class SushigoTest < Minitest::Test
     end
   end
 
-  def test_that_the_game_is_scored
+  def test_that_the_game_is_played
     game = Sushigo::Game.new(players: 3)
     game.play
   end

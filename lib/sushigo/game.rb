@@ -1,6 +1,7 @@
 require 'sushigo/scoring'
 require 'sushigo/player'
 require 'sushigo/cards/deck'
+
 # Game module
 module Sushigo
   include Cards
@@ -69,13 +70,26 @@ module Sushigo
         @meals[index] = []
       end
       full_hand_count.times do
+        temporary_deck = nil
         @players.each_with_index do |player, index|
+          # Agent is called
           card = player.pick_one
           @meals[index] << card
+
+          if temporary_deck
+            player_to_pass = index + 1
+            player_to_pass = 0 if index == @players.size - 1
+            @players[player_to_pass].deck = temporary_deck
+          end
+
+          temporary_deck = player.deck
         end
       end
+
       Game.score_round(@meals)
     end
+
+    def pick_and_pass; end
 
     def self.score_round(meals)
       scores = []
