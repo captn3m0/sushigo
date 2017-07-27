@@ -1,6 +1,7 @@
+# Game module
 module Sushigo
+  # Player class
   class Player
-
     def initialize
       @deck = []
     end

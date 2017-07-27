@@ -1,7 +1,7 @@
 require 'sushigo/scoring'
 require 'sushigo/player'
 require 'sushigo/cards/deck'
-
+# Game module
 module Sushigo
   include Cards
 
@@ -15,13 +15,14 @@ module Sushigo
     Pudding,
     Sashimi,
     Tempura,
-    Wasabi,
-  ]
+    Wasabi
+  ].freeze
 
   DESSERTS = [
     Pudding
-  ]
+  ].freeze
 
+  # Primary Game class
   class Game
     attr_reader :deck, :players, :meals
 
@@ -43,10 +44,12 @@ module Sushigo
       cards_per_player = full_hand_count
 
       @deck.shuffle!
+
+      # This is as per the original Sushi Go Rules
+      # And not the party rules
       @players.each do |player|
         player.deck = @deck.pop cards_per_player
       end
-
     end
 
     def full_hand_count
@@ -54,7 +57,7 @@ module Sushigo
     end
 
     def play
-      3.times do |i|
+      3.times do |_i|
         setup
         play_round
       end
@@ -81,7 +84,7 @@ module Sushigo
         scores << dish.score_round(meals)
       end
 
-      scores.transpose.map {|player_scores| player_scores.reduce(:+)}
+      scores.transpose.map { |player_scores| player_scores.reduce(:+) }
     end
 
     def self.score_dessert(desserts)
@@ -92,8 +95,7 @@ module Sushigo
         scores << dessert.score_dessert(desserts)
       end
 
-      scores.transpose.map {|player_scores| player_scores.reduce(:+)}
+      scores.transpose.map { |player_scores| player_scores.reduce(:+) }
     end
-
   end
 end

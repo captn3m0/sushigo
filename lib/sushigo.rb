@@ -1,5 +1,5 @@
 require 'sushigo/version'
 require 'sushigo/game'
+# Primary Game module
 module Sushigo
-  # Your code goes here...
 end
