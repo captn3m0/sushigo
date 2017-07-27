@@ -1,6 +1,7 @@
 require 'sushigo/scoring'
 require 'sushigo/player'
 require 'sushigo/cards/deck'
+require 'sushigo/errors'
 
 # Game module
 module Sushigo
@@ -66,15 +67,44 @@ module Sushigo
 
     def play_round
       @meals = []
+
       @count.times do |index|
         @meals[index] = []
       end
+
       full_hand_count.times do
         temporary_deck = nil
         @players.each_with_index do |player, index|
+          # Show the player their meal so far
+          meal = @players[index].meal = @meals[index]
           # Agent is called
           card = player.pick_one
           @meals[index] << card
+
+          # Now, before we pass we check for sushigo
+          if player.playing_chopstick
+            unless @meals[index].include? Cards::Deck::CHOPSTICK
+              raise Sushigo::Errors::WrongSushiGoNoChopstick
+            end
+
+            unless player.deck.size >= 1
+              raise Sushigo::Errors::WrongSushiGoLastHand
+            end
+
+            # Find what the player wants to collect extra
+            second_card = player.chopstick
+
+            second_card.is_a?(Cards::Card) || raise('Pick a card')
+
+            meal << second_card
+
+            # Find the first chopstick and remove it
+            meal.delete_at meal.index(Cards::Deck::CHOPSTICK)
+
+            # Then add a new chopstick to the player's deck
+            # before it is passed
+            player.deck << Cards::Deck::CHOPSTICK
+          end
 
           if temporary_deck
             player_to_pass = index + 1

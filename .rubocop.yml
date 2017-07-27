@@ -8,7 +8,7 @@
 
 # Offense count: 8
 Metrics/AbcSize:
-  Max: 27
+  Max: 200
 
 # Offense count: 12
 # Configuration parameters: AllowHeredoc, AllowURI, URISchemes, IgnoreCopDirectives, IgnoredPatterns.
@@ -19,7 +19,10 @@ Metrics/LineLength:
 # Offense count: 8
 # Configuration parameters: CountComments.
 Metrics/MethodLength:
-  Max: 20
+  Max: 200
+
+Metrics/CyclomaticComplexity:
+  Max: 10
 
 # Offense count: 9
 Style/Documentation:
