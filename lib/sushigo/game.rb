@@ -33,7 +33,7 @@ module Sushigo
       @count.times do
         @players << Player.new
       end
-      raise "Invalid number of players" unless @players.size == @count
+      raise 'Invalid number of players' unless @players.size == @count
       @desserts = []
       @deck = Cards::Deck.standard
     end
@@ -73,7 +73,7 @@ module Sushigo
       # And not the party rules
       @players.each do |player|
         player.deck = @deck.pop cards_per_player
-        raise "Player deck size mismatch" unless player.deck.size == cards_per_player
+        raise 'Player deck size mismatch' unless player.deck.size == cards_per_player
       end
 
       @meals = []
@@ -95,7 +95,7 @@ module Sushigo
           #
           card = player.pick_one
 
-          raise "Card not returned" unless card.is_a?(Cards::Card)
+          raise 'Card not returned' unless card.is_a?(Cards::Card)
 
           @meals[index] << card
 
@@ -126,9 +126,7 @@ module Sushigo
 
           hold = player.deck
 
-          unless deck_passed_to_me.nil?
-            player.deck = deck_passed_to_me
-          end
+          player.deck = deck_passed_to_me unless deck_passed_to_me.nil?
 
           # Now we pass the deck
           deck_passed_to_me = hold
@@ -136,7 +134,6 @@ module Sushigo
 
         @players[0].deck = deck_passed_to_me
       end
-
 
       save_desserts_for_later
 
@@ -169,6 +166,12 @@ module Sushigo
       end
 
       scores.transpose.map { |player_scores| player_scores.reduce(:+) }
+    end
+
+    def display
+      @meals.each do |meal|
+        puts meal.join ', '
+      end
     end
   end
 end

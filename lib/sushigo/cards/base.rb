@@ -11,8 +11,9 @@ module Sushigo
         [0] * decks.size
       end
 
+      # Remove module name from the Card names
       def to_s
-        self.class.name
+        self.class.to_s.gsub(/^.*::/, '')
       end
     end
   end

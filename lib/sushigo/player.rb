@@ -15,8 +15,7 @@ module Sushigo
     # Since cards are already shuffled
     # we pick the top card
     def pick_one
-
-      raise "Empty Deck" if @deck.empty?
+      raise 'Empty Deck' if @deck.empty?
 
       picked_card = @deck.pop
 
