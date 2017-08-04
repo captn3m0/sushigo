@@ -2,7 +2,7 @@
 module Sushigo
   # Player class
   class Player
-    attr_writer :meal
+    attr_writer :meal, :deck
     attr_reader :playing_chopstick
 
     def initialize
@@ -15,11 +15,16 @@ module Sushigo
     # Since cards are already shuffled
     # we pick the top card
     def pick_one
+
+      raise "Empty Deck" if @deck.empty?
+
       picked_card = @deck.pop
+
       if @meal.include?(Sushigo::Deck::CHOPSTICK) && @deck.size > 1
         # 20% chance of calling out a sushigo
         sushigo if rand(1..5) == 3
       end
+
       picked_card
     end
 

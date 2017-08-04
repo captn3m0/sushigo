@@ -20,6 +20,7 @@ class SushigoTest < Minitest::Test
 
   def test_that_the_game_runs
     game = Sushigo::Game.new(players: 4)
+    assert game.players.size == 4
     game.play
     assert_equal 4, game.meals.size
     game.meals.each do |meal|

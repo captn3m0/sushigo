@@ -1,7 +1,7 @@
 require 'sushigo/player'
 require 'sushigo/cards/deck'
 require 'sushigo/errors'
-
+require 'pp'
 # Game module
 module Sushigo
   include Cards
@@ -33,6 +33,7 @@ module Sushigo
       @count.times do
         @players << Player.new
       end
+      raise "Invalid number of players" unless @players.size == @count
       @desserts = []
       @deck = Cards::Deck.standard
     end
@@ -72,6 +73,7 @@ module Sushigo
       # And not the party rules
       @players.each do |player|
         player.deck = @deck.pop cards_per_player
+        raise "Player deck size mismatch" unless player.deck.size == cards_per_player
       end
 
       @meals = []
@@ -85,12 +87,16 @@ module Sushigo
       setup_round
 
       full_hand_count.times do
-        temporary_deck = nil
+        deck_passed_to_me = nil
         @players.each_with_index do |player, index|
           # Show the player their meal so far
-          meal = @players[index].meal = @meals[index]
+          meal = player.meal = @meals[index]
           # Agent is called
+          #
           card = player.pick_one
+
+          raise "Card not returned" unless card.is_a?(Cards::Card)
+
           @meals[index] << card
 
           # Now, before we pass we check for sushigo
@@ -118,15 +124,19 @@ module Sushigo
             player.deck << Cards::Deck::CHOPSTICK
           end
 
-          if temporary_deck
-            player_to_pass = index + 1
-            player_to_pass = 0 if index == @players.size - 1
-            @players[player_to_pass].deck = temporary_deck
+          hold = player.deck
+
+          unless deck_passed_to_me.nil?
+            player.deck = deck_passed_to_me
           end
 
-          temporary_deck = player.deck
+          # Now we pass the deck
+          deck_passed_to_me = hold
         end
+
+        @players[0].deck = deck_passed_to_me
       end
+
 
       save_desserts_for_later
 
