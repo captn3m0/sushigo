@@ -9,8 +9,10 @@ Currently only supports the original game, and not Sushi Go Party. The following
 
 1. Scoring of individual rounds and final scoring (desserts)
 2. Setup for 2-5 players
+3. Chopsticks are supported, using the extra sushi go call
+4. Pick-and-pass
 
-Chopsticks are not yet implemented, and neither is the pick-pass mechanism. There are rigorous tests for the scoring algorithms though.
+There are rigorous tests for the scoring algorithms as well.
 
 You can find the complete rules at [the gamewright website][rules].
 

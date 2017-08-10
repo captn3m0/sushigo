@@ -1,7 +1,7 @@
 require 'sushigo/player'
 require 'sushigo/cards/deck'
 require 'sushigo/errors'
-require 'pp'
+
 # Game module
 module Sushigo
   include Cards
