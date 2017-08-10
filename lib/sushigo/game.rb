@@ -83,6 +83,25 @@ module Sushigo
       end
     end
 
+    def play_chopstick(player, meal)
+      if meal.include? Cards::Deck::CHOPSTICK
+        # We ask the player
+        if player.deck.size >= 1 and second_card = player.sushigo
+
+          raise 'Pick a card' unless second_card.is_a? Cards::Card
+
+          meal << second_card
+
+          # Find the first chopstick and remove it
+          meal.delete_at meal.index(Cards::Deck::CHOPSTICK)
+
+          # Then add a new chopstick to the player's deck
+          # before it is passed
+          player.deck << Cards::Deck::CHOPSTICK
+        end
+      end
+    end
+
     def play_round
       setup_round
 
@@ -97,32 +116,9 @@ module Sushigo
 
           raise 'Card not returned' unless card.is_a?(Cards::Card)
 
-          @meals[index] << card
+          meal << card
 
-          # Now, before we pass we check for sushigo
-          if player.playing_chopstick
-            unless @meals[index].include? Cards::Deck::CHOPSTICK
-              raise Sushigo::Errors::WrongSushiGoNoChopstick
-            end
-
-            unless player.deck.size >= 1
-              raise Sushigo::Errors::WrongSushiGoLastHand
-            end
-
-            # Find what the player wants to collect extra
-            second_card = player.chopstick
-
-            second_card.is_a?(Cards::Card) || raise('Pick a card')
-
-            meal << second_card
-
-            # Find the first chopstick and remove it
-            meal.delete_at meal.index(Cards::Deck::CHOPSTICK)
-
-            # Then add a new chopstick to the player's deck
-            # before it is passed
-            player.deck << Cards::Deck::CHOPSTICK
-          end
+          play_chopstick player, meal
 
           hold = player.deck
 
