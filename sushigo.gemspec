@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = 'Sushigo'
   spec.description   = 'Sushigo'
-  spec.homepage      = 'https://captnemo.in/ideas/'
+  spec.homepage      = 'https://github.com/captn3m0/sushigo'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|

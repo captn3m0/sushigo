@@ -40,11 +40,24 @@ module Sushigo
       @desserts = []
       @deck = Cards::Deck.standard
       @round_scores = []
+      @meals = []
+    end
+
+    def self.restore(state)
+      game = self.new(players: state.count)
+
+      state.decks.each_with_index do |deck, index|
+        game.players[index].deck = deck
+      end
+
+      game.meals = state.meals
+      game.desserts = state.desserts
+
     end
 
     # This returns the complete game state
     def state
-      { players: @count,
+      { count: @count,
         decks:   @players.map(&:deck),
         meals: @meals,
         desserts: @desserts }
@@ -91,10 +104,9 @@ module Sushigo
         raise 'Player deck size mismatch' unless player.deck.size == cards_per_player
       end
 
-      @meals = []
-
       @count.times do |index|
         @meals[index] = []
+        @desserts[index] = []
       end
     end
 

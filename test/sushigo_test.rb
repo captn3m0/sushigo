@@ -32,4 +32,16 @@ class SushigoTest < Minitest::Test
     game = Sushigo::Game.new(players: 3)
     game.play
   end
+
+  def test_that_the_game_can_be_saved
+    game = Sushigo::Game.new(players: 2)
+    assert_equal({count: 2, decks: [[], []], meals: [], desserts:[]} , game.state)
+    game.setup_round
+    assert_equal(10, game.state[:decks][0].size)
+    assert_equal([[],[]], game.state[:meals])
+    assert_equal([[],[]], game.state[:desserts])
+
+    game.play_round
+    ## TODO: each round state asserts
+  end
 end

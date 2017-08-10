@@ -2,15 +2,12 @@
 module Sushigo
   # Player class
   class Player
-    attr_writer :meal, :deck
-    attr_reader :playing_chopstick
+    attr_accessor :deck
+    attr_writer :meal
 
     def initialize
-      @playing_chopstick = false
       @deck = []
     end
-
-    attr_accessor :deck
 
     # Since cards are already shuffled
     # we pick the top card
