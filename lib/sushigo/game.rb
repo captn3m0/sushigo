@@ -30,12 +30,24 @@ module Sushigo
     def initialize(options)
       @players = []
       @count = options[:players]
+
       @count.times do
         @players << Player.new
       end
+
       raise 'Invalid number of players' unless @players.size == @count
+
       @desserts = []
       @deck = Cards::Deck.standard
+      @round_scores = []
+    end
+
+    # This returns the complete game state
+    def state
+      { players: @count,
+        decks:   @players.map(&:deck),
+        meals: @meals,
+        desserts: @desserts }
     end
 
     # We setup the game
@@ -48,13 +60,16 @@ module Sushigo
     end
 
     def play
-      round_scores = []
       3.times do |_i|
         setup_game
-        round_scores << play_round
+        @round_scores << play_round
       end
+      scores
+    end
+
+    def scores
       dessert_scores = Game.score_dessert(@desserts)
-      Game.calc_final_scores(round_scores, dessert_scores)
+      Game.calc_final_scores(@round_scores, dessert_scores)
     end
 
     def self.calc_final_scores(round, dessert)
@@ -84,22 +99,22 @@ module Sushigo
     end
 
     def play_chopstick(player, meal)
-      if meal.include? Cards::Deck::CHOPSTICK
-        # We ask the player
-        if player.deck.size >= 1 and second_card = player.sushigo
+      return unless meal.include? Cards::Deck::CHOPSTICK
 
-          raise 'Pick a card' unless second_card.is_a? Cards::Card
+      # We ask the player
+      return unless player.deck.size >= 1 && (second_card = player.sushigo)
 
-          meal << second_card
+      # Ensure that the card returned is correct
+      raise 'Pick a card' unless second_card.is_a? Cards::Card
 
-          # Find the first chopstick and remove it
-          meal.delete_at meal.index(Cards::Deck::CHOPSTICK)
+      meal << second_card
 
-          # Then add a new chopstick to the player's deck
-          # before it is passed
-          player.deck << Cards::Deck::CHOPSTICK
-        end
-      end
+      # Find the first chopstick and remove it
+      meal.delete_at meal.index(Cards::Deck::CHOPSTICK)
+
+      # Then add a new chopstick to the player's deck
+      # before it is passed
+      player.deck << Cards::Deck::CHOPSTICK
     end
 
     def play_round

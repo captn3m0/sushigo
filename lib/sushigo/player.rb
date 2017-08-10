@@ -16,13 +16,7 @@ module Sushigo
     # we pick the top card
     def pick_one
       raise 'Empty Deck' if @deck.empty?
-      picked_card = @deck.pop
-      if @meal.include?(Sushigo::Deck::CHOPSTICK) && @deck.size > 1
-        # 20% chance of calling out a sushigo
-        sushigo
-      end
-
-      picked_card
+      @deck.pop
     end
 
     # You shout sushigo if you want to
